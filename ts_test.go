@@ -1,4 +1,4 @@
-package rr
+package ts
 
 import (
 	"testing"
