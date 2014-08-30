@@ -11,43 +11,43 @@ type Bucket struct {
 	V *float64  `json:"v"`
 }
 
-// TS represents a single time-series.
-type TS struct {
+// Series represents a single time-series.
+type Series struct {
 	Duration   time.Duration
 	Resolution time.Duration
 	buckets    map[int64]*Bucket
 }
 
-// NewTS creates a new TS with the given duration and resolution
-func NewTS(duration time.Duration, resolution time.Duration) *TS {
-	return &TS{
+// NewSeries creates a new Series with the given duration and resolution
+func NewSeries(duration time.Duration, resolution time.Duration) *Series {
+	return &Series{
 		Duration:   duration,
 		Resolution: resolution,
 		buckets:    make(map[int64]*Bucket, 0),
 	}
 }
 
-func (ts *TS) floor(t time.Time) time.Time {
-	return t.Truncate(ts.Resolution)
+func (s *Series) floor(t time.Time) time.Time {
+	return t.Truncate(s.Resolution)
 }
 
-func (ts *TS) index(t time.Time) int64 {
-	return int64(math.Mod(float64(ts.floor(t).Unix()), float64(ts.Duration.Seconds())))
+func (s *Series) index(t time.Time) int64 {
+	return int64(math.Mod(float64(s.floor(t).Unix()), float64(s.Duration.Seconds())))
 }
 
 // Insert takes a given value at a given time and inserts a
-// new bucket into the TS given the spec
-func (ts *TS) Insert(t time.Time, value float64) {
-	b := &Bucket{ts.floor(t), &value}
-	idx := ts.index(b.T)
-	ts.buckets[idx] = b
+// new bucket into the Series given the spec
+func (s *Series) Insert(t time.Time, value float64) {
+	b := &Bucket{s.floor(t), &value}
+	idx := s.index(b.T)
+	s.buckets[idx] = b
 }
 
-func (ts *TS) get(t time.Time) *Bucket {
-	floor := ts.floor(t)
-	idx := ts.index(t)
+func (s *Series) get(t time.Time) *Bucket {
+	floor := s.floor(t)
+	idx := s.index(t)
 
-	bucket := ts.buckets[idx]
+	bucket := s.buckets[idx]
 	if bucket == nil || bucket.T != floor {
 		return &Bucket{floor, nil}
 	}
@@ -56,22 +56,22 @@ func (ts *TS) get(t time.Time) *Bucket {
 }
 
 // Range takes a start and end time and returns a list of buckets that match
-func (ts *TS) Range(start time.Time, end time.Time) []*Bucket {
+func (s *Series) Range(start time.Time, end time.Time) []*Bucket {
 	var buckets []*Bucket
-	startFloor := ts.floor(start)
-	endFloor := ts.floor(end)
+	startFloor := s.floor(start)
+	endFloor := s.floor(end)
 
 	now := time.Now()
-	firstPossibleFloor := ts.floor(now.Add(-1 * ts.Duration))
+	firstPossibleFloor := s.floor(now.Add(-1 * s.Duration))
 
 	// sweep through our range of buckets
-	for x := startFloor; x.Before(endFloor) || x.Equal(endFloor); x = x.Add(ts.Resolution) {
-		// don't return values beyound our TS boundaries or from the future
+	for x := startFloor; x.Before(endFloor) || x.Equal(endFloor); x = x.Add(s.Resolution) {
+		// don't return values beyound our Series boundaries or from the future
 		if x.Before(firstPossibleFloor) || x.After(now) {
 			continue
 		}
 
-		bucket := ts.get(x)
+		bucket := s.get(x)
 		// should not be the case but good defense
 		if bucket == nil {
 			continue

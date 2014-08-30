@@ -6,17 +6,17 @@ import (
 )
 
 func TestInsert(t *testing.T) {
-	ts := NewTS(1*time.Hour, 10*time.Second)
+	s := NewSeries(1*time.Hour, 10*time.Second)
 
 	now := time.Now()
 
-	buckets := ts.Range(now, now)
+	buckets := s.Range(now, now)
 	if buckets == nil {
 		t.Fatal("no buckets found")
 	}
 
-	ts.Insert(now, 100)
-	buckets = ts.Range(now, now)
+	s.Insert(now, 100)
+	buckets = s.Range(now, now)
 	if len(buckets) != 1 {
 		t.Fatalf("we should have 1 bucket but we have %d\n", len(buckets))
 	}
