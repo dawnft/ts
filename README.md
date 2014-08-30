@@ -1,7 +1,7 @@
 ts [![Build Status](https://travis-ci.org/gorsuch/ts.svg)](https://travis-ci.org/gorsuch/ts)
 ==
 
-lightweight time-series lib for go
+lightweight time series lib for go
 
 ## Goals
 
