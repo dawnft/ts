@@ -7,7 +7,7 @@ lightweight time series lib for go
 
 * metric insert should be idempotent
 * easy to understand
-* no persistennce: that's up to you
+* no persistence: that's up to you
 * no metric naming schemes, tagging or discoverability: that's up to you
 
 ## Installation
