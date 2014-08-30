@@ -3,6 +3,13 @@ ts [![Build Status](https://travis-ci.org/gorsuch/ts.svg)](https://travis-ci.org
 
 lightweight time-series lib for go
 
+## Goals
+
+* metric insert should be idempotent
+* * easy to understand
+* no persistennce, that's up to you
+* no metric naming schemes or discoverability, that's up to you
+
 ## Installation
 
 ```
