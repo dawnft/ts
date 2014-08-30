@@ -6,7 +6,7 @@ lightweight time-series lib for go
 ## Goals
 
 * metric insert should be idempotent
-* * easy to understand
+* easy to understand
 * no persistennce, that's up to you
 * no metric naming schemes or discoverability, that's up to you
 
