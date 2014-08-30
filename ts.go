@@ -8,7 +8,7 @@ import (
 // Bucket represents a value at a given point in time
 type Bucket struct {
 	T time.Time
-	V *int64
+	V *float64
 }
 
 // TS represents a single time-series.
@@ -37,7 +37,7 @@ func (ts *TS) index(t time.Time) int64 {
 
 // Insert takes a given value at a given time and inserts a
 // new bucket into the TS given the spec
-func (ts *TS) Insert(t time.Time, value int64) {
+func (ts *TS) Insert(t time.Time, value float64) {
 	b := &Bucket{ts.floor(t), &value}
 	idx := ts.index(b.T)
 	ts.buckets[idx] = b
