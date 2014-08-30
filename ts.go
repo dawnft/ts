@@ -56,16 +56,16 @@ func (ts *TS) get(t time.Time) *Bucket {
 }
 
 // Range takes a start and end time and returns a list of buckets that match
-// TODO - test for range that goes outside of the series
 func (ts *TS) Range(start time.Time, end time.Time) []*Bucket {
 	var buckets []*Bucket
 	startFloor := ts.floor(start)
 	endFloor := ts.floor(end)
 
 	now := time.Now()
+	firstPossibleFloor := ts.floor(now.Add(-1 * ts.Duration))
 
 	for x := startFloor; x.Before(endFloor) || x.Equal(endFloor); x = x.Add(ts.Resolution) {
-		if x.After(now) {
+		if x.Before(firstPossibleFloor) || x.After(now) {
 			continue
 		}
 
