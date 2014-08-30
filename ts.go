@@ -15,7 +15,16 @@ type Bucket struct {
 type TS struct {
 	Duration   time.Duration
 	Resolution time.Duration
-	Buckets    map[int64]*Bucket
+	buckets    map[int64]*Bucket
+}
+
+// NewTS creates a new TS with the given duration and resolution
+func NewTS(duration time.Duration, resolution time.Duration) *TS {
+	return &TS{
+		Duration:   duration,
+		Resolution: resolution,
+		buckets:    make(map[int64]*Bucket, 0),
+	}
 }
 
 func (ts *TS) floor(t time.Time) time.Time {
@@ -31,14 +40,14 @@ func (ts *TS) index(t time.Time) int64 {
 func (ts *TS) Insert(t time.Time, value int64) {
 	b := &Bucket{ts.floor(t), &value}
 	idx := ts.index(b.T)
-	ts.Buckets[idx] = b
+	ts.buckets[idx] = b
 }
 
 func (ts *TS) get(t time.Time) *Bucket {
 	floor := ts.floor(t)
 	idx := ts.index(t)
 
-	bucket := ts.Buckets[idx]
+	bucket := ts.buckets[idx]
 	if bucket == nil || bucket.T != floor {
 		return &Bucket{floor, nil}
 	}

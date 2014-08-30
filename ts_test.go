@@ -6,11 +6,7 @@ import (
 )
 
 func TestInsert(t *testing.T) {
-	ts := TS{
-		Resolution: 10 * time.Second,
-		Duration:   1 * time.Hour,
-		Buckets:    make(map[int64]*Bucket, 0),
-	}
+	ts := NewTS(1*time.Hour, 10*time.Second)
 
 	now := time.Now()
 
