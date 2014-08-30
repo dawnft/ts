@@ -34,7 +34,6 @@ buckets := s.Range(anHourAgo, now)
 ## TODO
 
 * [ ] buid a higher abstraction to rollup one series into another
-* 
 
 ## Inspiration
 
