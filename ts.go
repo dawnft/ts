@@ -64,12 +64,15 @@ func (ts *TS) Range(start time.Time, end time.Time) []*Bucket {
 	now := time.Now()
 	firstPossibleFloor := ts.floor(now.Add(-1 * ts.Duration))
 
+	// sweep through our range of buckets
 	for x := startFloor; x.Before(endFloor) || x.Equal(endFloor); x = x.Add(ts.Resolution) {
+		// don't return values beyound our TS boundaries or from the future
 		if x.Before(firstPossibleFloor) || x.After(now) {
 			continue
 		}
 
 		bucket := ts.get(x)
+		// should not be the case but good defense
 		if bucket == nil {
 			continue
 		}
