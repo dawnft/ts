@@ -5,6 +5,7 @@ import (
 	"time"
 )
 
+// Bucket represents a value at a given point in time
 type Bucket struct {
 	T time.Time
 	V *int64
@@ -12,8 +13,8 @@ type Bucket struct {
 
 // TS represents a single time-series.
 type TS struct {
-	Resolution time.Duration
 	Duration   time.Duration
+	Resolution time.Duration
 	Buckets    map[int64]*Bucket
 }
 
@@ -25,10 +26,12 @@ func (ts *TS) index(t time.Time) int64 {
 	return int64(math.Mod(float64(ts.floor(t).Unix()), float64(ts.Duration.Seconds())))
 }
 
+// Insert takes a given value at a given time and inserts a
+// new bucket into the TS given the spec
 func (ts *TS) Insert(t time.Time, value int64) {
-	p := &Bucket{ts.floor(t), &value}
-	idx := ts.index(p.T)
-	ts.Buckets[idx] = p
+	b := &Bucket{ts.floor(t), &value}
+	idx := ts.index(b.T)
+	ts.Buckets[idx] = b
 }
 
 // TODO - test for buckets that are out of range of the TS
@@ -44,13 +47,13 @@ func (ts *TS) get(t time.Time) *Bucket {
 	return bucket
 }
 
-// TODO - test for start being greater than finish
-func (ts *TS) Range(start time.Time, end time.Time) ([]*Bucket, error) {
-	buckets := make([]*Bucket, 0)
-	start_floor := ts.floor(start)
-	end_floor := ts.floor(end)
+// Range takes a start and end time and returns a list of buckets that match
+func (ts *TS) Range(start time.Time, end time.Time) []*Bucket {
+	var buckets []*Bucket
+	startFloor := ts.floor(start)
+	endFloor := ts.floor(end)
 
-	for x := start_floor; x.Before(end_floor) || x.Equal(end_floor); x = x.Add(ts.Resolution) {
+	for x := startFloor; x.Before(endFloor) || x.Equal(endFloor); x = x.Add(ts.Resolution) {
 		bucket := ts.get(x)
 		if bucket == nil {
 			continue
@@ -58,5 +61,5 @@ func (ts *TS) Range(start time.Time, end time.Time) ([]*Bucket, error) {
 		buckets = append(buckets, bucket)
 	}
 
-	return buckets, nil
+	return buckets
 }

@@ -14,13 +14,13 @@ func TestInsert(t *testing.T) {
 
 	now := time.Now()
 
-	buckets, _ := ts.Range(now, now)
+	buckets := ts.Range(now, now)
 	if buckets == nil {
 		t.Fatal("no buckets found")
 	}
 
 	ts.Insert(now, 100)
-	buckets, _ = ts.Range(now, now)
+	buckets = ts.Range(now, now)
 	if len(buckets) != 1 {
 		t.Fatalf("we should have 1 bucket but we have %d\n", len(buckets))
 	}
