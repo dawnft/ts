@@ -34,3 +34,9 @@ buckets := s.Range(anHourAgo, now)
 ## TODO
 
 * [ ] buid a higher abstraction to rollup one series into another
+* 
+
+## Inspiration
+
+* [rrdtool](http://oss.oetiker.ch/rrdtool/)
+* [whisper](https://github.com/graphite-project/whisper)
