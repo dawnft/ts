@@ -8,7 +8,7 @@ import (
 func TestInsert(t *testing.T) {
 	ts := TS{
 		Resolution: 10 * time.Second,
-		Size:       1 * time.Hour,
+		Duration:   1 * time.Hour,
 		Buckets:    make(map[int64]*Bucket, 0),
 	}
 
