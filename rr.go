@@ -32,7 +32,7 @@ func (ts *TS) Insert(t time.Time, value int64) {
 }
 
 // TODO - test for buckets that are out of range of the TS
-func (ts *TS) Get(t time.Time) *Bucket {
+func (ts *TS) get(t time.Time) *Bucket {
 	floor := ts.floor(t)
 	idx := ts.index(t)
 
@@ -45,13 +45,13 @@ func (ts *TS) Get(t time.Time) *Bucket {
 }
 
 // TODO - test for start being greater than finish
-func (ts *TS) GetRange(start time.Time, end time.Time) ([]*Bucket, error) {
+func (ts *TS) Range(start time.Time, end time.Time) ([]*Bucket, error) {
 	buckets := make([]*Bucket, 0)
 	start_floor := ts.floor(start)
 	end_floor := ts.floor(end)
 
-	for x := start_floor; x.Before(end_floor); x = x.Add(ts.Resolution) {
-		bucket := ts.Get(x)
+	for x := start_floor; x.Before(end_floor) || x.Equal(end_floor); x = x.Add(ts.Resolution) {
+		bucket := ts.get(x)
 		if bucket == nil {
 			continue
 		}

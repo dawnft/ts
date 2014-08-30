@@ -14,13 +14,18 @@ func TestInsert(t *testing.T) {
 
 	now := time.Now()
 
-	ts.Insert(now, 100)
-	if *ts.Get(now).V != 100 {
-		t.Fatal("data was not stored")
-	}
-
-	buckets, _ := ts.GetRange(now, now.Add(4*time.Hour))
+	buckets, _ := ts.Range(now, now)
 	if buckets == nil {
 		t.Fatal("no buckets found")
+	}
+
+	ts.Insert(now, 100)
+	buckets, _ = ts.Range(now, now)
+	if len(buckets) != 1 {
+		t.Fatalf("we should have 1 bucket but we have %d\n", len(buckets))
+	}
+
+	if *buckets[0].V != 100 {
+		t.Fatal("data was not stored")
 	}
 }
