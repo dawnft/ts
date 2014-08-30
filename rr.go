@@ -31,14 +31,13 @@ func (ts *TS) Insert(t time.Time, value int64) {
 	ts.Buckets[idx] = p
 }
 
-// TODO - test for buckets that are out of range
-// TODO - test for buckets with old epoch values
+// TODO - test for buckets that are out of range of the TS
 func (ts *TS) Get(t time.Time) *Bucket {
 	floor := ts.floor(t)
 	idx := ts.index(t)
 
 	bucket := ts.Buckets[idx]
-	if bucket == nil {
+	if bucket == nil || bucket.T != floor {
 		return &Bucket{floor, nil}
 	}
 
