@@ -7,8 +7,8 @@ import (
 
 // Bucket represents a value at a given point in time
 type Bucket struct {
-	T time.Time
-	V *float64
+	T time.Time `json:"t"`
+	V *float64  `json:"v"`
 }
 
 // TS represents a single time-series.
