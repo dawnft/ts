@@ -27,22 +27,19 @@ func NewSeries(duration time.Duration, resolution time.Duration) *Series {
 	}
 }
 
+// calculate the bucket time for a given Time
 func (s *Series) floor(t time.Time) time.Time {
 	return t.Truncate(s.Resolution)
 }
 
+// calculate the index for our bucket
 func (s *Series) index(t time.Time) int64 {
 	return int64(math.Mod(float64(s.floor(t).Unix()), float64(s.Duration.Seconds())))
 }
 
-// Insert takes a given value at a given time and inserts a
-// new bucket into the Series given the spec
-func (s *Series) Insert(t time.Time, value float64) {
-	b := &Bucket{s.floor(t), &value}
-	idx := s.index(b.T)
-	s.buckets[idx] = b
-}
-
+// get a bucket for a given timestamp
+// returns a fresh one if the bucket is non-existent
+// or holding an old timestamp
 func (s *Series) get(t time.Time) *Bucket {
 	floor := s.floor(t)
 	idx := s.index(t)
@@ -53,6 +50,14 @@ func (s *Series) get(t time.Time) *Bucket {
 	}
 
 	return bucket
+}
+
+// Insert takes a given value at a given time and inserts a
+// new bucket into the Series given the spec
+func (s *Series) Insert(t time.Time, value float64) {
+	b := &Bucket{s.floor(t), &value}
+	idx := s.index(b.T)
+	s.buckets[idx] = b
 }
 
 // Range takes a start and end time and returns a list of buckets that match
