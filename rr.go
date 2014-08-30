@@ -34,7 +34,6 @@ func (ts *TS) Insert(t time.Time, value int64) {
 	ts.Buckets[idx] = b
 }
 
-// TODO - test for buckets that are out of range of the TS
 func (ts *TS) get(t time.Time) *Bucket {
 	floor := ts.floor(t)
 	idx := ts.index(t)
@@ -48,6 +47,7 @@ func (ts *TS) get(t time.Time) *Bucket {
 }
 
 // Range takes a start and end time and returns a list of buckets that match
+// TODO - test for range that goes outside of the series
 func (ts *TS) Range(start time.Time, end time.Time) []*Bucket {
 	var buckets []*Bucket
 	startFloor := ts.floor(start)
