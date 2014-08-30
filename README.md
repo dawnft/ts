@@ -26,4 +26,4 @@ buckets := s.Range(anHourAgo, now)
 
 ## TODO
 
-* [ ] allow a higher resolution series to rollup to a lower resolution series
+* [ ] buid a higher abstraction to rollup one series into another
