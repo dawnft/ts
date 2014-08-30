@@ -28,7 +28,7 @@ func NewTS(duration time.Duration, resolution time.Duration) *TS {
 }
 
 func (ts *TS) floor(t time.Time) time.Time {
-	return t.Round(ts.Resolution)
+	return t.Truncate(ts.Resolution)
 }
 
 func (ts *TS) index(t time.Time) int64 {
@@ -62,7 +62,13 @@ func (ts *TS) Range(start time.Time, end time.Time) []*Bucket {
 	startFloor := ts.floor(start)
 	endFloor := ts.floor(end)
 
+	now := time.Now()
+
 	for x := startFloor; x.Before(endFloor) || x.Equal(endFloor); x = x.Add(ts.Resolution) {
+		if x.After(now) {
+			continue
+		}
+
 		bucket := ts.get(x)
 		if bucket == nil {
 			continue
