@@ -23,3 +23,7 @@ now := time.Now()
 anHourAgo := now.Add(-1 * time.Hour)
 buckets := ts.Range(anHourAgo, now)
 ```
+
+## TODO
+
+* [ ] allow a higher resolution series to rollup to a lower resolution series
