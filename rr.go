@@ -13,7 +13,7 @@ type Bucket struct {
 // TS represents a single time-series.
 type TS struct {
 	Resolution time.Duration
-	Size       int64
+	Size       time.Duration
 	Buckets    map[int64]*Bucket
 }
 
@@ -22,7 +22,7 @@ func (ts *TS) floor(t time.Time) time.Time {
 }
 
 func (ts *TS) index(t time.Time) int64 {
-	return int64(math.Mod(float64(ts.floor(t).Unix()), float64(ts.Size)))
+	return int64(math.Mod(float64(ts.floor(t).Unix()), float64(ts.Size.Seconds())))
 }
 
 func (ts *TS) Insert(t time.Time, value int64) {
