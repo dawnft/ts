@@ -26,9 +26,7 @@ s := ts.NewSeries(4 * time.Hour, 5 * time.Second)
 s.Insert(time.Now(), 42)
 
 // fetch the last hour of data
-now := time.Now()
-anHourAgo := now.Add(-1 * time.Hour)
-buckets := s.Range(anHourAgo, now)
+buckets := s.FromDuration(1 * time.Hour)
 ```
 
 ## TODO
