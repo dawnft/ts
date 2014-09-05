@@ -86,3 +86,10 @@ func (s *Series) Range(start time.Time, end time.Time) []*Bucket {
 
 	return buckets
 }
+
+// FromDuration returns a range of Buckets, between Now and Now - d
+func (s *Series) FromDuration(d time.Duration) []*Bucket {
+	now := time.Now()
+	start := now.Add(-1 * d).Add(s.Resolution)
+	return s.Range(start, now)
+}
