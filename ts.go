@@ -46,7 +46,9 @@ func (s *Series) get(t time.Time) *Bucket {
 
 	bucket := s.buckets[idx]
 	if bucket == nil || bucket.T != floor {
-		return &Bucket{floor, nil}
+		b := &Bucket{floor, nil}
+		s.buckets[idx] = b
+		return b
 	}
 
 	return bucket
@@ -55,9 +57,8 @@ func (s *Series) get(t time.Time) *Bucket {
 // Insert takes a given value at a given time and inserts a
 // new bucket into the Series given the spec
 func (s *Series) Insert(t time.Time, value float64) {
-	b := &Bucket{s.floor(t), &value}
-	idx := s.index(b.T)
-	s.buckets[idx] = b
+	b := s.get(t)
+	b.V = &value
 }
 
 // Range takes a start and end time and returns a list of buckets that match
@@ -77,10 +78,6 @@ func (s *Series) Range(start time.Time, end time.Time) []*Bucket {
 		}
 
 		bucket := s.get(x)
-		// should not be the case but good defense
-		if bucket == nil {
-			continue
-		}
 		buckets = append(buckets, bucket)
 	}
 
