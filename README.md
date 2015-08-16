@@ -29,10 +29,6 @@ s.Insert(time.Now(), 42)
 buckets := s.FromDuration(1 * time.Hour)
 ```
 
-## TODO
-
-* [ ] buid a higher abstraction to rollup one series into another
-
 ## Inspiration
 
 * [rrdtool](http://oss.oetiker.ch/rrdtool/)
