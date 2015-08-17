@@ -7,9 +7,9 @@ import (
 
 // Bucket represents a value at a given point in time
 type Bucket struct {
-	Time  time.Time `json:"t"`
-	Value float64   `json:"v"`
-	Count int       `json:"c"`
+	Time  time.Time `json:"time"`
+	Value float64   `json:"value"`
+	Count int       `json:"count"`
 	Min   float64   `json:"min"`
 	Max   float64   `json:"max"`
 }
