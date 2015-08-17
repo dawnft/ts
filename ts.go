@@ -40,7 +40,7 @@ func (s *Series) index(t time.Time) int64 {
 
 // get a bucket for a given timestamp
 // returns a fresh one if the bucket is non-existent
-// or holding an old timestamp
+// or expired
 func (s *Series) get(t time.Time) *Bucket {
 	floor := s.floor(t)
 	idx := s.index(t)
