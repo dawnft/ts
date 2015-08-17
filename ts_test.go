@@ -21,20 +21,20 @@ func TestInsert(t *testing.T) {
 		t.Fatalf("we should have 1 bucket but we have %d\n", len(buckets))
 	}
 
-	if buckets[0].V != 100 {
+	if buckets[0].Value != 100 {
 		t.Fatal("data was not stored")
 	}
 
-	if buckets[0].C != 1 {
+	if buckets[0].Count != 1 {
 		t.Fatal("counter was not updated")
 	}
 
 	s.Insert(now, 100)
-	if buckets[0].V != 200 {
+	if buckets[0].Value != 200 {
 		t.Fatal("data was not updated on second insert")
 	}
 
-	if buckets[0].C != 2 {
+	if buckets[0].Count != 2 {
 		t.Fatal("counter was not updated on second insert")
 	}
 

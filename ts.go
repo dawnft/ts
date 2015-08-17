@@ -7,9 +7,9 @@ import (
 
 // Bucket represents a value at a given point in time
 type Bucket struct {
-	T time.Time `json:"t"`
-	V float64   `json:"v"`
-	C int       `json:"c"`
+	Time  time.Time `json:"t"`
+	Value float64   `json:"v"`
+	Count int       `json:"c"`
 }
 
 // Series represents a single time-series.
@@ -46,7 +46,7 @@ func (s *Series) get(t time.Time) *Bucket {
 	idx := s.index(t)
 
 	bucket := s.buckets[idx]
-	if bucket == nil || bucket.T != floor {
+	if bucket == nil || bucket.Time != floor {
 		b := &Bucket{floor, 0, 0}
 		s.buckets[idx] = b
 		return b
@@ -59,8 +59,8 @@ func (s *Series) get(t time.Time) *Bucket {
 // new bucket into the Series given the spec
 func (s *Series) Insert(t time.Time, value float64) {
 	b := s.get(t)
-	b.V += value
-	b.C++
+	b.Value += value
+	b.Count++
 }
 
 // Range takes a start and end time and returns a list of buckets that match
