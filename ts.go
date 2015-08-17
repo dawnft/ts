@@ -10,6 +10,8 @@ type Bucket struct {
 	Time  time.Time `json:"t"`
 	Value float64   `json:"v"`
 	Count int       `json:"c"`
+	Min   float64   `json:"min"`
+	Max   float64   `json:"max"`
 }
 
 // Series represents a single time-series.
@@ -47,7 +49,7 @@ func (s *Series) get(t time.Time) *Bucket {
 
 	bucket := s.buckets[idx]
 	if bucket == nil || bucket.Time != floor {
-		b := &Bucket{floor, 0, 0}
+		b := &Bucket{floor, 0, 0, 0, 0}
 		s.buckets[idx] = b
 		return b
 	}
@@ -61,6 +63,20 @@ func (s *Series) Insert(t time.Time, value float64) {
 	b := s.get(t)
 	b.Value += value
 	b.Count++
+	if b.Count == 1 {
+		// first insert, set min and max
+		b.Min = value
+		b.Max = value
+		return
+	}
+
+	if value < b.Min {
+		b.Min = value
+	}
+
+	if value > b.Max {
+		b.Max = value
+	}
 }
 
 // Range takes a start and end time and returns a list of buckets that match
